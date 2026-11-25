@@ -1,5 +1,10 @@
 # promptprobe
 
+[![CI](https://github.com/aabanehsan/promptprobe/actions/workflows/ci.yml/badge.svg)](https://github.com/aabanehsan/promptprobe/actions/workflows/ci.yml)
+![Python](https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white)
+![License](https://img.shields.io/badge/license-MIT-green)
+![OWASP LLM01](https://img.shields.io/badge/OWASP-LLM01%20Prompt%20Injection-black)
+
 A command-line tool for testing LLM apps against prompt injection. Point it at a model API or your own chatbot endpoint, and it runs 39 attacks across 6 categories, checks whether each one worked, and writes a report you can hand to a dev team.
 
 ```
