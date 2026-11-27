@@ -106,6 +106,8 @@ target:
   send_system_prompt: false   # the app supplies its own
 ```
 
+Every HTTP-based target retries network errors and HTTP 408, 409, 429 and 5xx responses. It waits 1s, 2s, 4s and so on (capped at 30s, with a little jitter) and uses the server's `Retry-After` header when it asks for longer. Set `max_retries` (default 3, `0` turns retries off) and `timeout` (seconds, default 60) under `target:`. Other 4xx errors such as a bad API key fail right away.
+
 Note: with `send_system_prompt: false` the planted secret never reaches the model, so the `secret_leak` detector can't fire. To test leakage of your app's real secrets, add a unique value to your app's system prompt in a test environment and write a custom suite that looks for it.
 
 ## Useful flags

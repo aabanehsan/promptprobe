@@ -3,11 +3,11 @@
 Planned work, roughly in order. Checked items are shipped.
 
 ## v0.2 — CI-friendly
-- [ ] Retry with exponential backoff on 429/5xx from targets
+- [x] Retry with exponential backoff on 429/5xx from targets (honors Retry-After, configurable `max_retries`)
 - [ ] SARIF output (`-f sarif`) so findings show up in GitHub code scanning
 - [ ] `promptprobe diff old.json new.json` to compare two runs and flag regressions
 - [ ] Reusable GitHub Action (`action.yml`) wrapping `promptprobe run`
-- [ ] Tests for the HTTP target's `response_path` and header env-var expansion
+- [x] Tests for the HTTP target's `response_path` and header env-var expansion
 
 ## v0.3 — More attack surface
 - [ ] `tool_abuse` suite: injections that try to trigger unauthorized tool/function calls (OWASP LLM06 Excessive Agency)
