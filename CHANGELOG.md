@@ -4,6 +4,8 @@ All notable changes to this project are listed here. Format follows [Keep a Chan
 
 ## [Unreleased]
 ### Added
+- SARIF 2.1.0 output (`-f sarif`) for GitHub code scanning, with per-test rules, `security-severity`, stable fingerprints and target errors reported as tool notifications
+- `--sarif-artifact` to choose which file SARIF alerts point at
 - Roadmap and changelog
 - README badges
 - `Retry-After` support for both the seconds and HTTP-date forms

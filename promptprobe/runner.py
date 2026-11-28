@@ -20,6 +20,7 @@ class RunConfig:
     trials: int = 1
     concurrency: int = 4
     plant_secret: bool = True
+    artifact: str | None = None  # file SARIF findings point at (prompt or config)
 
 
 @dataclass

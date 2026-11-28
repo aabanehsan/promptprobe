@@ -134,6 +134,30 @@ LLM output is random, so a single run can miss things. Use `-n 3` or more for re
     OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 ```
 
+### GitHub code scanning (SARIF)
+
+`-f sarif` writes a SARIF 2.1.0 file that GitHub code scanning can ingest. Each attack becomes a rule, and each successful attack becomes an alert with its severity, OWASP tag, success rate and detector evidence.
+
+A model has no source line to blame, so every alert points at line 1 of the file that defines what you are defending: `--system-prompt-file` if you pass one, otherwise `--config`. Override it with `--sarif-artifact PATH`. Use a path relative to the repo root so GitHub can link the alert to the file.
+
+```yaml
+permissions:
+  security-events: write
+steps:
+  - uses: actions/checkout@v4
+  - run: pip install git+https://github.com/aabanehsan/promptprobe
+  - run: promptprobe run -c promptprobe.yaml --system-prompt-file prompts/system.txt -n 3 -f sarif,md -o reports
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+  - uses: github/codeql-action/upload-sarif@v3
+    if: always()
+    with:
+      sarif_file: reports
+      category: promptprobe
+```
+
+Alerts carry a stable fingerprint (test id + artifact + target), so the same finding across runs stays one alert and closes when the attack stops working.
+
 ## Writing your own attacks
 
 Suites are plain YAML. Drop a file in a folder and pass it with `--suite path/` (or list it under `suites:` in the config).
@@ -177,7 +201,7 @@ promptprobe/
   detectors.py      the five detectors and the refusal/meta-language heuristics
   targets/          openai-compatible, anthropic, generic http, mock
   suites/           the built-in attack YAML files
-  report/           JSON, Markdown and HTML writers
+  report/           JSON, Markdown, HTML and SARIF writers
 tests/              pytest suite (runs fully offline against the mock targets)
 ```
 

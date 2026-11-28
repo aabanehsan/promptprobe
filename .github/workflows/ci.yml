@@ -24,3 +24,14 @@ jobs:
           set +e
           promptprobe run -t mock -m vulnerable --fail-on high -f md -o reports
           test $? -eq 1
+      - name: SARIF output is well formed
+        run: |
+          promptprobe run -t mock -m vulnerable -f sarif -o sarif-out --sarif-artifact promptprobe/config_template.yaml
+          python - <<'PY'
+          import glob, json
+          [path] = glob.glob("sarif-out/*.sarif")
+          run = json.load(open(path))["runs"][0]
+          assert run["results"], "expected findings against the vulnerable mock"
+          assert all(r["locations"][0]["physicalLocation"]["artifactLocation"]["uri"] == "promptprobe/config_template.yaml" for r in run["results"])
+          print(f"{len(run['results'])} SARIF results, {len(run['tool']['driver']['rules'])} rules")
+          PY

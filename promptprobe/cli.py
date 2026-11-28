@@ -3,6 +3,7 @@
     promptprobe run --target mock                      # offline demo
     promptprobe run -c promptprobe.yaml                # real target from config
     promptprobe run -c promptprobe.yaml --category system_prompt_leak --trials 3
+    promptprobe run -c promptprobe.yaml -f sarif -o reports   # for GitHub code scanning
     promptprobe list                                   # show available tests
     promptprobe init                                   # write a starter config
 """
@@ -77,6 +78,7 @@ def cmd_run(args: argparse.Namespace) -> int:
         trials=args.trials or run_cfg.get("trials", 1),
         concurrency=args.concurrency or run_cfg.get("concurrency", 4),
         plant_secret=cfg.get("plant_secret", True),
+        artifact=args.sarif_artifact or args.system_prompt_file or args.config,
     )
 
     print(c(f"promptprobe v{__version__}", "1") + f"  target={target.label}  tests={len(tests)}  trials={rc.trials}",
@@ -173,7 +175,9 @@ def build_parser() -> argparse.ArgumentParser:
     r.add_argument("-n", "--trials", type=int, help="attempts per test (LLMs are random; 3+ recommended)")
     r.add_argument("-j", "--concurrency", type=int, help="parallel requests")
     r.add_argument("-o", "--out", help="report folder (default: reports)")
-    r.add_argument("-f", "--format", help="comma list of json,md,html (default: all)")
+    r.add_argument("-f", "--format", help="comma list of json,md,html,sarif (default: json,md,html)")
+    r.add_argument("--sarif-artifact", metavar="PATH",
+                   help="file SARIF findings point at (default: --system-prompt-file, else --config)")
     r.add_argument("--fail-on", choices=[s.value for s in Severity],
                    help="exit 1 if any finding at or above this severity (for CI)")
     r.add_argument("-v", "--verbose", action="store_true")

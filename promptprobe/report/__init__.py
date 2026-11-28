@@ -1,4 +1,4 @@
-"""Report writers: JSON (machine-readable), Markdown (for PRs/issues) and HTML (to share)."""
+"""Report writers: JSON (machine-readable), Markdown (for PRs/issues), HTML (to share) and SARIF (code scanning)."""
 
 from __future__ import annotations
 
@@ -9,6 +9,7 @@ from pathlib import Path
 from .. import __version__
 from ..models import Severity, TestResult, Verdict
 from ..runner import RunReport
+from .sarif import write_sarif
 
 SEV_ORDER = {s.value: s.rank for s in Severity}
 
@@ -202,4 +203,4 @@ def write_html(report: RunReport, path: Path) -> None:
     path.write_text(out, encoding="utf-8")
 
 
-WRITERS = {"json": write_json, "md": write_markdown, "html": write_html}
+WRITERS = {"json": write_json, "md": write_markdown, "html": write_html, "sarif": write_sarif}
